@@ -13,15 +13,18 @@ const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 function wallClockInZone(iso: string, zone: string): ICAL.Time {
 	const dt = DateTime.fromISO(iso, { setZone: true }).setZone(zone);
 	if (!dt.isValid) throw new Error(`Invalid date-time "${iso}"`);
-	return new ICAL.Time({
-		year: dt.year,
-		month: dt.month,
-		day: dt.day,
-		hour: dt.hour,
-		minute: dt.minute,
-		second: dt.second,
-		isDate: false,
-	});
+	return new ICAL.Time(
+		{
+			year: dt.year,
+			month: dt.month,
+			day: dt.day,
+			hour: dt.hour,
+			minute: dt.minute,
+			second: dt.second,
+			isDate: false,
+		},
+		ICAL.Timezone.localTimezone,
+	);
 }
 
 function setDateTimeProperty(

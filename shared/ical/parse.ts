@@ -17,7 +17,7 @@ function registerEmbeddedTimezones(calendar: ICAL.Component): void {
 	for (const vtimezone of calendar.getAllSubcomponents('vtimezone')) {
 		const timezone = new ICAL.Timezone(vtimezone);
 		if (!ICAL.TimezoneService.has(timezone.tzid)) {
-			ICAL.TimezoneService.register(timezone.tzid, timezone);
+			ICAL.TimezoneService.register(timezone, timezone.tzid);
 		}
 	}
 }
