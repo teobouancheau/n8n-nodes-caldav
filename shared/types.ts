@@ -7,8 +7,13 @@ export interface CalDavConnection {
 	// basic
 	username?: string;
 	password?: string;
-	// oauth2 (token already refreshed by n8n core)
+	// oauth2 — refresh handled by tsdav's Oauth mode (n8n's transparent refresh
+	// only applies to its own HTTP helpers, which cannot issue DAV methods)
 	accessToken?: string;
+	refreshToken?: string;
+	clientId?: string;
+	clientSecret?: string;
+	tokenUrl?: string;
 	// token / header auth
 	headerName?: string;
 	tokenPrefix?: string;

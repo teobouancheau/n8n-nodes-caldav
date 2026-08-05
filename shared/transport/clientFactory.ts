@@ -33,6 +33,19 @@ export function buildClientOptions(conn: CalDavConnection): DavClientOptions {
 		};
 	}
 	if (conn.authMethod === 'oauth2') {
+		if (conn.refreshToken && conn.clientId && conn.clientSecret && conn.tokenUrl) {
+			return {
+				serverUrl: conn.serverUrl,
+				credentials: {
+					tokenUrl: conn.tokenUrl,
+					refreshToken: conn.refreshToken,
+					clientId: conn.clientId,
+					clientSecret: conn.clientSecret,
+				},
+				authMethod: 'Oauth',
+				defaultAccountType: 'caldav',
+			};
+		}
 		return {
 			serverUrl: conn.serverUrl,
 			credentials: { accessToken: conn.accessToken },
