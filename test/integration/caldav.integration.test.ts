@@ -32,7 +32,6 @@ describe.runIf(runIntegration)('CalDAV integration (live server)', () => {
 	let calendarUrl: string;
 	let calendarInfo: CalendarInfo;
 	let eventUrl: string;
-	let eventEtag: string;
 
 	beforeAll(async () => {
 		client = await createClient(connection);
@@ -77,7 +76,6 @@ describe.runIf(runIntegration)('CalDAV integration (live server)', () => {
 			timeRange: { start: '2026-09-01T00:00:00Z', end: '2026-09-02T00:00:00Z' },
 		});
 		expect(objects).toHaveLength(1);
-		eventEtag = objects[0].etag;
 		const [event] = parseEvents(objects[0].data);
 		expect(event.summary).toBe('Integration meeting');
 		expect(event.start).toBe('2026-09-01T10:00:00+02:00');
@@ -98,7 +96,6 @@ describe.runIf(runIntegration)('CalDAV integration (live server)', () => {
 		const [event] = parseEvents(refreshed[0].data);
 		expect(event.summary).toBe('Integration meeting (renamed)');
 		expect(event.uid).toBe('itest-event-1@n8n');
-		eventEtag = refreshed[0].etag;
 	});
 
 	it('rejects an update with a stale ETag', async () => {
