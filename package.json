@@ -1,0 +1,72 @@
+{
+	"name": "n8n-nodes-caldav",
+	"version": "0.1.0",
+	"description": "n8n nodes for CalDAV calendars: events, tasks, free/busy, and a polling trigger for Apple iCloud, Google, Nextcloud, Fastmail, Radicale, Baikal, and any RFC 4791 server",
+	"license": "MIT",
+	"homepage": "",
+	"keywords": [
+		"n8n-community-node-package",
+		"caldav",
+		"calendar",
+		"icloud",
+		"nextcloud",
+		"google-calendar",
+		"webdav",
+		"ical"
+	],
+	"author": {
+		"name": "Teo Bouancheau",
+		"email": "t.bouancheau@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tbouancheau/n8n-nodes-caldav.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:integration": "RUN_INTEGRATION=1 vitest run test/integration",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/CalDavBasicApi.credentials.js",
+			"dist/credentials/CalDavOAuth2Api.credentials.js",
+			"dist/credentials/CalDavTokenApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/CalDav/CalDav.node.js",
+			"dist/nodes/CalDavTrigger/CalDavTrigger.node.js"
+		]
+	},
+	"dependencies": {
+		"ical-generator": "11.1.0",
+		"ical.js": "2.2.1",
+		"luxon": "3.7.2",
+		"tsdav": "2.3.1"
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "*",
+		"@types/luxon": "^3.4.2",
+		"eslint": "9.32.0",
+		"n8n-workflow": "*",
+		"prettier": "3.6.2",
+		"release-it": "^19.0.4",
+		"typescript": "5.9.2",
+		"vitest": "^3.2.0"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
