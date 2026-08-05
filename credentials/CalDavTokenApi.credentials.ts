@@ -36,11 +36,12 @@ export class CalDavTokenApi implements ICredentialType {
 			description: 'HTTP header the token is sent in',
 		},
 		{
-			displayName: 'Token Prefix',
-			name: 'tokenPrefix',
+			displayName: 'Value Prefix',
+			name: 'valuePrefix',
 			type: 'string',
 			default: 'Bearer',
-			description: 'Prefix placed before the token value. Leave empty for raw API keys.',
+			description:
+				'Prefix placed before the token in the header (e.g. "Bearer"). Leave empty for raw API keys.',
 		},
 		{
 			displayName: 'Token',
@@ -65,7 +66,7 @@ export class CalDavTokenApi implements ICredentialType {
 		requestOptions: IHttpRequestOptions,
 	): Promise<IHttpRequestOptions> {
 		const headerName = String(credentials.headerName || 'Authorization');
-		const tokenPrefix = String(credentials.tokenPrefix ?? '');
+		const tokenPrefix = String(credentials.valuePrefix ?? '');
 		const token = String(credentials.token ?? '');
 		requestOptions.headers = {
 			...requestOptions.headers,

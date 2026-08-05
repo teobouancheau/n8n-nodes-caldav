@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"description": "n8n nodes for CalDAV calendars: events, tasks, free/busy, and a polling trigger for Apple iCloud, Google, Nextcloud, Fastmail, Radicale, Baikal, and any RFC 4791 server",
 	"license": "MIT",
-	"homepage": "",
+	"homepage": "https://github.com/tbouancheau/n8n-nodes-caldav",
 	"keywords": [
 		"n8n-community-node-package",
 		"caldav",
@@ -39,7 +39,7 @@
 	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
-		"strict": true,
+		"strict": false,
 		"credentials": [
 			"dist/credentials/CalDavBasicApi.credentials.js",
 			"dist/credentials/CalDavOAuth2Api.credentials.js",

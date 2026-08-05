@@ -1,3 +1,4 @@
+import { UserError } from 'n8n-workflow';
 import { createDAVClient } from 'tsdav';
 
 import type { CalDavConnection } from '../types';
@@ -10,15 +11,15 @@ export function validateServerUrl(conn: CalDavConnection): void {
 	try {
 		parsed = new URL(conn.serverUrl);
 	} catch {
-		throw new Error(`"${conn.serverUrl}" is not a valid URL`);
+		throw new UserError(`"${conn.serverUrl}" is not a valid URL`);
 	}
 	if (parsed.protocol === 'http:' && !conn.allowHttp) {
-		throw new Error(
+		throw new UserError(
 			'The server URL uses plain HTTP. Enable "Allow HTTP" in the credential only for trusted local servers, or use HTTPS',
 		);
 	}
 	if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-		throw new Error(`Unsupported protocol "${parsed.protocol}" — use HTTPS`);
+		throw new UserError(`Unsupported protocol "${parsed.protocol}" — use HTTPS`);
 	}
 }
 
