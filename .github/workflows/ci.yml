@@ -32,3 +32,42 @@ jobs:
 
       - name: Run build
         run: 'npm run build'
+
+      - name: Run unit tests
+        run: 'npm test'
+
+  integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: 'npm ci'
+
+      - name: Start Radicale CalDAV server
+        run: |
+          python -m pip install --quiet radicale
+          mkdir -p /tmp/radicale-data
+          nohup python -m radicale \
+            --storage-filesystem-folder=/tmp/radicale-data \
+            --auth-type none \
+            --server-hosts localhost:5232 > /tmp/radicale.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -s -o /dev/null http://localhost:5232/ && break
+            sleep 0.5
+          done
+
+      - name: Run integration tests
+        run: 'npm run test:integration'

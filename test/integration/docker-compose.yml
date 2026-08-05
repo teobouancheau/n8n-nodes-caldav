@@ -1,0 +1,16 @@
+# Local CalDAV server for integration testing.
+# Usage:
+#   docker compose -f test/integration/docker-compose.yml up -d
+#   npm run test:integration
+services:
+  radicale:
+    image: tomsquest/docker-radicale:latest
+    ports:
+      - '5232:5232'
+    volumes:
+      - ./radicale.config:/config/config:ro
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5232/']
+      interval: 5s
+      timeout: 3s
+      retries: 10

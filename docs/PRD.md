@@ -89,7 +89,7 @@ Both nodes declare `usableAsTool: true` for AI Agent usage, with LLM-optimized o
 | Get Many | List calendars from the discovered calendar-home-set with `displayname`, URL, color, `supported-calendar-component-set`, `getctag`, `sync-token`, supported reports |
 | Create | `MKCALENDAR` with display name, description, color, component set. Disabled with a clear error for servers that do not support it (Google — [Google CalDAV guide](https://developers.google.com/workspace/calendar/caldav/v2/guide)) |
 | Delete | `DELETE` on the collection URL, with an explicit "this deletes the calendar and all its contents" confirmation notice in the UI description |
-| Get Availability | `free-busy-query` REPORT (RFC 4791 §7.10) over a time range. Falls back to computing busy blocks client-side from a time-range event query for servers without the REPORT (Google does not implement `free-busy-query` — same source) |
+| Get Availability | Busy blocks computed client-side from a time-range event query (recurrences expanded, `TRANSP:TRANSPARENT` events skipped, intervals merged). Client-side is the primary path because it behaves identically on every server; the `free-busy-query` REPORT (RFC 4791 §7.10) is not implemented by all providers (Google lacks it — [Google CalDAV guide](https://developers.google.com/workspace/calendar/caldav/v2/guide)) |
 
 All operations that take a calendar use a **dynamic dropdown** (`loadOptions`) populated via discovery, with a "By URL" expression override.
 
@@ -160,7 +160,7 @@ Three credential types, all implementing `ICredentialType` with declarative inje
 
 ### 5.2 CalDAV OAuth2 (`calDavOAuth2Api`)
 
-- `extends = ['oAuth2Api']`; n8n core performs the authorization-code flow and token refresh ([starter example](https://github.com/n8n-io/n8n-nodes-starter/blob/master/credentials/GithubIssuesOAuth2Api.credentials.ts)).
+- `extends = ['oAuth2Api']`; n8n core performs the authorization-code flow ([starter example](https://github.com/n8n-io/n8n-nodes-starter/blob/master/credentials/GithubIssuesOAuth2Api.credentials.ts)). Token refresh during execution is handled by tsdav's `Oauth` mode using the stored refresh token — n8n's transparent refresh only applies to its own HTTP helpers, which cannot issue DAV methods (`PROPFIND`/`REPORT`).
 - Preconfigured Google defaults (overridable for other OAuth-capable servers): auth URL `https://accounts.google.com/o/oauth2/v2/auth` and token URL `https://oauth2.googleapis.com/token` ([Google OAuth 2.0 for web server apps](https://developers.google.com/identity/protocols/oauth2/web-server)), scope `https://www.googleapis.com/auth/calendar` ([Google Calendar API scopes](https://developers.google.com/workspace/calendar/api/auth)), `access_type=offline&prompt=consent` query parameters for refresh tokens.
 - Google requires OAuth2 over HTTPS for CalDAV; Basic auth returns 401 ([Google CalDAV guide](https://developers.google.com/workspace/calendar/caldav/v2/guide)).
 
@@ -202,10 +202,12 @@ Per-provider setup guides (app-password creation steps, endpoint, quirks) ship i
 
 | Dependency | Role | Why this one |
 |---|---|---|
-| [tsdav](https://github.com/natelindev/tsdav) (MIT, v2.x) | WebDAV/CalDAV transport: discovery, PROPFIND/REPORT, calendar-query/multiget, MKCALENDAR, free-busy, smartCollectionSync | TypeScript-native, ~121k weekly downloads, 2 transitive deps (`xml-js`, `debug`), Node ≥ 18; supports Basic/OAuth2 (incl. Google refresh flow)/Bearer/Digest/custom auth; production-proven by [Cal.com's fork](https://github.com/calcom/tsDAV) |
-| [ical.js](https://www.npmjs.com/package/ical.js) (MPL-2.0, v2.x) | RFC 5545 parsing + `RecurExpansion` for client-side recurrence | Mozilla's reference-grade parser, zero deps, ~441k weekly downloads. MPL-2.0 is file-level copyleft — safe as an unmodified npm dependency |
-| [ical-generator](https://github.com/sebbo2002/ical-generator) (MIT, v11.x) | RFC 5545 generation (events, alarms, attendees, VTIMEZONE) | Actively maintained, TypeScript, ~618k weekly downloads |
+| [tsdav](https://github.com/natelindev/tsdav) (MIT, v2.x) | WebDAV/CalDAV transport: discovery, PROPFIND/REPORT, calendar-query/multiget, MKCALENDAR, smartCollectionSync | TypeScript-native, ~121k weekly downloads, 2 transitive deps (`xml-js`, `debug`), Node ≥ 18; supports Basic/OAuth2 (incl. Google refresh flow)/Bearer/Digest/custom auth; production-proven by [Cal.com's fork](https://github.com/calcom/tsDAV) |
+| [ical.js](https://www.npmjs.com/package/ical.js) (MPL-2.0, v2.x) | RFC 5545 parsing **and generation** + `RecurExpansion` for client-side recurrence | Mozilla's reference-grade implementation, zero deps, ~441k weekly downloads. Using one library for both parse and build guarantees round-trip symmetry (in-place component mutation preserves unknown properties) and precise EXDATE/RRULE control. MPL-2.0 is file-level copyleft — safe as an unmodified npm dependency |
+| [@touch4it/ical-timezones](https://www.npmjs.com/package/@touch4it/ical-timezones) (ISC, v1.x) | VTIMEZONE component generation for IANA zones (with DST RRULEs) | Zero deps; supplies the VTIMEZONE blocks that ical.js cannot synthesize from zone names |
 | [luxon](https://moment.github.io/luxon/) | Timezone math via native `Intl` zone data | n8n's own bundled date library — matches host conventions, no bundled tzdata |
+
+Decision note (implementation): the draft stack listed `ical-generator` for ICS generation; it was replaced by direct ical.js component construction because ical-generator's string-RRULE path cannot carry EXDATE, and single-library parse/build removes a whole class of asymmetry bugs.
 
 Explicitly avoided: the unmaintained `dav` library (source of mediabc's open bugs), standalone `rrule` (known TZID/DST defects; ical.js's `RecurExpansion` covers expansion), and dependency bloat (competitor `n8n-nodes-caldav-carddav` ships 100+ runtime deps).
 
