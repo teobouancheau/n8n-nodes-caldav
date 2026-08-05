@@ -11,7 +11,7 @@ export class CalDavTokenApi implements ICredentialType {
 
 	displayName = 'CalDAV Token API';
 
-	documentationUrl = 'https://github.com/tbouancheau/n8n-nodes-caldav#credentials';
+	documentationUrl = 'https://github.com/teobouancheau/n8n-nodes-caldav#credentials';
 
 	icon = {
 		light: 'file:../nodes/CalDav/caldav.svg',

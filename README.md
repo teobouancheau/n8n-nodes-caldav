@@ -16,10 +16,10 @@ n8n community nodes for CalDAV calendars: full event, task, and calendar managem
 
 ## Installation
 
-Self-hosted n8n: **Settings > Community Nodes > Install** and enter `n8n-nodes-caldav`, or:
+Self-hosted n8n: **Settings > Community Nodes > Install** and enter `@teobouancheau/n8n-nodes-caldav`, or:
 
 ```bash
-npm install n8n-nodes-caldav
+npm install @teobouancheau/n8n-nodes-caldav
 ```
 
 This package uses runtime dependencies (tsdav, ical.js) and therefore installs on self-hosted n8n instances.

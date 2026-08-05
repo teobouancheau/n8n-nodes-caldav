@@ -1,9 +1,9 @@
 {
-	"name": "n8n-nodes-caldav",
+	"name": "@teobouancheau/n8n-nodes-caldav",
 	"version": "0.1.0",
 	"description": "n8n nodes for CalDAV calendars: events, tasks, free/busy, and a polling trigger for Apple iCloud, Google, Nextcloud, Fastmail, Radicale, Baikal, and any RFC 4791 server",
 	"license": "MIT",
-	"homepage": "https://github.com/tbouancheau/n8n-nodes-caldav",
+	"homepage": "https://github.com/teobouancheau/n8n-nodes-caldav",
 	"keywords": [
 		"n8n-community-node-package",
 		"caldav",
@@ -20,7 +20,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/tbouancheau/n8n-nodes-caldav.git"
+		"url": "https://github.com/teobouancheau/n8n-nodes-caldav.git"
 	},
 	"scripts": {
 		"build": "n8n-node build",

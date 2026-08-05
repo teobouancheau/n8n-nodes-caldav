@@ -7,7 +7,7 @@ export class CalDavOAuth2Api implements ICredentialType {
 
 	extends = ['oAuth2Api'];
 
-	documentationUrl = 'https://github.com/tbouancheau/n8n-nodes-caldav#credentials';
+	documentationUrl = 'https://github.com/teobouancheau/n8n-nodes-caldav#credentials';
 
 	icon = {
 		light: 'file:../nodes/CalDav/caldav.svg',

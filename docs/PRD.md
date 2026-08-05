@@ -249,7 +249,7 @@ Rules: the action node and trigger node share all protocol logic through `shared
 
 ### 7.4 Scaffold and toolchain
 
-Scaffolded with the official CLI: `npm create @n8n/node@latest` (`@n8n/node-cli`) — required tooling for community nodes ([n8n docs](https://docs.n8n.io/connect/create-nodes/build-your-node/using-the-n8n-node-tool)). Node.js ≥ 22. TypeScript strict, CommonJS, target es2019, `outDir: dist` ([starter tsconfig](https://github.com/n8n-io/n8n-nodes-starter)). `package.json`: `n8n` block registering credentials/nodes from `dist`, `files: ["dist"]`, `peerDependencies: { "n8n-workflow": "*" }`, name `n8n-nodes-caldav` is squatted by an abandoned package — publish as `@<scope>/n8n-nodes-caldav` or a distinct unscoped name (decision at publish time), keyword `n8n-community-node-package` (required for GUI discovery).
+Scaffolded with the official CLI: `npm create @n8n/node@latest` (`@n8n/node-cli`) — required tooling for community nodes ([n8n docs](https://docs.n8n.io/connect/create-nodes/build-your-node/using-the-n8n-node-tool)). Node.js ≥ 22. TypeScript strict, CommonJS, target es2019, `outDir: dist` ([starter tsconfig](https://github.com/n8n-io/n8n-nodes-starter)). `package.json`: `n8n` block registering credentials/nodes from `dist`, `files: ["dist"]`, `peerDependencies: { "n8n-workflow": "*" }`, name: the unscoped `n8n-nodes-caldav` is squatted by an abandoned package, so the package publishes as **`@teobouancheau/n8n-nodes-caldav`** (scoped names are valid community-node names per n8n's `@<scope>/n8n-nodes-<name>` convention), keyword `n8n-community-node-package` (required for GUI discovery).
 
 ---
 
