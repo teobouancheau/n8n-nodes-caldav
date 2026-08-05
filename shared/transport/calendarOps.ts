@@ -250,7 +250,11 @@ export async function smartSync(
 		created,
 		updated,
 		deleted,
-		nextSyncToken: typeof result.syncToken === 'string' ? result.syncToken : undefined,
+		// tsdav only surfaces the new token when the REPORT returned response
+		// elements; fall back to the token from the calendar PROPFIND so quiet
+		// calendars still converge to token-based syncs.
+		nextSyncToken:
+			(typeof result.syncToken === 'string' ? result.syncToken : undefined) ?? calendar.syncToken,
 		nextCtag: result.ctag,
 		nextEtags,
 	};
