@@ -41,6 +41,9 @@ function objectEvents(object: RemoteObject): EventModel[] {
 		.map((event) => ({ ...event, url: object.url, etag: object.etag }));
 }
 
+// Trigger nodes cannot act as AI Agent tools, and INodeTypeDescription only
+// permits `usableAsTool: true`, so the property is omitted deliberately.
+// eslint-disable-next-line @n8n/community-nodes/node-usable-as-tool
 export class CalDavTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'CalDAV Trigger',
@@ -53,7 +56,6 @@ export class CalDavTrigger implements INodeType {
 		subtitle: '={{$parameter["events"].join(", ")}}',
 		defaults: { name: 'CalDAV Trigger' },
 		polling: true,
-		usableAsTool: false,
 		inputs: [],
 		outputs: [NodeConnectionTypes.Main],
 		credentials: CREDENTIAL_DEFINITIONS,
